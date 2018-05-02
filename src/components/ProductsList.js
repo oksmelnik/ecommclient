@@ -1,8 +1,9 @@
 import React, {PureComponent} from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import { fetchAllProducts } from '../actions/products'
+import { fetchAllProducts, createProduct, deleteProduct } from '../actions/products'
 import {Link} from 'react-router-dom'
+import ProductForm from './ProductForm'
 
 
 class ProductsList extends PureComponent {
@@ -18,6 +19,14 @@ class ProductsList extends PureComponent {
    this.props.fetchAllProducts()
  }
 
+ createProduct = (product) => {
+    this.props.createProduct(product)
+  }
+
+  deleteProduct = (productId) => {
+  this.props.deleteProduct(productId)
+}
+
   render() {
     const {products} = this.props
     return (
@@ -30,6 +39,7 @@ class ProductsList extends PureComponent {
               <th>#</th>
               <th>Name</th>
               <th>Price</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -37,13 +47,17 @@ class ProductsList extends PureComponent {
               <td>{product.id}</td>
              <Link to={ `/products/${product.id}` }>{product.name}</Link>
               <td>{product.price}</td>
+              <td><button onClick={ () => this.deleteProduct(product.id) }>Delete</button></td>
             </tr>)) }
           </tbody>
 				</table>
-      </div>
-    )
+
+        <h1>Create a new product</h1>
+        <ProductForm onSubmit={this.createProduct} />
+        </div>
+      )
+    }
   }
-}
 
 
 const mapStateToProps = function (state) {
@@ -52,4 +66,4 @@ const mapStateToProps = function (state) {
   }
 }
 
-export default connect(mapStateToProps, { fetchAllProducts })(ProductsList)
+export default connect(mapStateToProps, { fetchAllProducts, createProduct, deleteProduct })(ProductsList)
